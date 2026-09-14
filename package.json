@@ -1,0 +1,47 @@
+{
+  "name": "infra-deadlines",
+  "version": "1.0.0",
+  "description": "Dated shutdown deadlines in crypto and web3 infrastructure — removed endpoints, retired chains, cut free tiers — each with a UTC date, the action it demands, and a primary source.",
+  "keywords": [
+    "deprecations",
+    "sunset",
+    "end-of-life",
+    "blockchain",
+    "web3",
+    "infrastructure",
+    "dataset"
+  ],
+  "homepage": "https://sepia.software/blog/series/infra-graveyard",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sergeipalii/infra-deadlines.git"
+  },
+  "license": "MIT",
+  "author": "Sergei Palii (https://sepia.software)",
+  "type": "module",
+  "main": "./src/index.mjs",
+  "exports": {
+    ".": "./src/index.mjs",
+    "./deadlines.yaml": "./deadlines.yaml"
+  },
+  "bin": {
+    "infra-deadlines": "./bin/infra-deadlines.mjs"
+  },
+  "files": [
+    "src",
+    "bin",
+    "deadlines.yaml",
+    "LICENSE",
+    "LICENSE-DATA"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "verify": "node scripts/verify.mjs",
+    "check": "node scripts/verify.mjs --strict"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

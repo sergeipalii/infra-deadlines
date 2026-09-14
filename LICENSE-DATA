@@ -1,0 +1,17 @@
+The dataset in this repository — `deadlines.yaml` — is licensed under
+Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+You are free to share and adapt it, including commercially, provided you give
+appropriate credit and indicate if changes were made.
+
+    Attribution: Infra Deadlines by Sergei Palii / Sepia Software
+    https://github.com/sergeipalii/infra-deadlines
+
+Full licence text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+The code in this repository (`src/`, `bin/`, `scripts/`) is licensed
+separately under the MIT Licence — see LICENSE.
+
+Why the split: the code here is a thin reader, and the part worth reusing is
+the data. CC BY keeps the dataset reusable while attribution survives the
+copy — which is the point of publishing it at all.

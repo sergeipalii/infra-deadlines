@@ -1,0 +1,403 @@
+# Rolling deadline board for Infra Graveyard Weekly.
+# Carried into every issue: unexpired entries stay, expired ones move to `closed` once.
+# All times UTC. `time: null` means the source stated a date but no time.
+# Keep sorted by deadline.
+
+updated: 2026-09-12
+issue: 5   # доведён до #05 задним числом 02.09; шаг 8 после #05 не выполнялся.
+           # 04.09 добавлены находки свипа #06 и поправки живой сверки.
+           # 12.09 доска доведена вне цикла выпуска: четыре строки висели
+           # просроченными на публичной странице, а два события в неё не попали.
+
+open:
+  - id: chainlink-three-feeds-0902
+    what: "Chainlink lists CSPX/USD, IB01/USD and IBTA/USD (Ethereum) with shutdownDate 'September 2nd, 2026'. Re-checked on-chain 2026-09-12: all three still updating inside their 86400 s heartbeat — CSPX/USD 2026-09-11 07:30 UTC, IB01/USD 2026-09-11 08:20 UTC, IBTA/USD 2026-09-11 19:59 UTC. Ten days past the announced date the feeds are alive; the directory now labels them feedCategory 'deprecating'"
+    deadline: 2026-09-02
+    time: null
+    overdue: true   # срок прошёл, событие не наступило — держим открытым до факта
+    action: "Do not treat the directory date as the switch-off: check updatedAt on the proxy before and after any announced date"
+    source: "https://dev.chain.link/changelog (2026-08-21); reference-data-directory.vercel.app/feeds-mainnet.json; own on-chain checks 2026-09-04 08:59 UTC and 2026-09-12 05:20 UTC via eth.drpc.org"
+    source_quality: primary
+    first_issue: 6
+
+  - id: solana-rent-phase-2
+    what: "Solana rent reduction phase 2 (SIMD-0437-2): lamports_per_byte 6,333 -> 5,080 (the SIMD labels it 6,960 -> 5,080 against the original constant, -27%). The rent-exempt minimum is (128 + data bytes) x that, so an empty account goes 810,624 -> 650,240 lamports. Phase 1 (6,960 -> 6,333 per byte) went live on mainnet 2026-09-03"
+    deadline: 2026-09-15
+    time: null
+    date_precision: month   # source says 'mid-September 2026'
+    action: "Replace hardcoded rent constants with getMinimumBalanceForRentExemption() on the client and Rent::get() on-chain; reclaim excess lamports via WithdrawExcessLamports"
+    source: "https://solana.com/upgrades/reduced-rent"
+    source_quality: primary
+    first_issue: 6
+
+  - id: bitmex-final-delisting
+    what: "BitMEX delists and early-settles all remaining derivatives: 4 perpetual swaps (XBTUSD, XBTUSDT, ETHUSD, ETHUSDT) and 4 futures. Funding stops accruing at T start 04:00; settlement at 12:00 against .BXBT30M / .BETH30M and their USDT twins"
+    deadline: 2026-09-16
+    time: "12:00:00"
+    action: "Close positions manually if a 30-minute-index settlement price does not suit you — this, not 2026-09-23, is the day trading actually ends"
+    source: "https://www.bitmex.com/blog/reduce-only-september (2026-09-03)"
+    source_quality: primary
+    first_issue: 6
+
+  - id: fips-140-2-historical
+    what: "CMVP moves all remaining FIPS 140-2 certificates to the historical list (492 active on 2026-08-28)"
+    deadline: 2026-09-21
+    time: null
+    action: "Check whether your module has a FIPS 140-3 submission in the CMVP queue; after the date the 140-2 cert is valid for existing systems only, not new procurement"
+    source: "https://csrc.nist.gov/projects/fips-140-3-transition-effort; count via 808bits.com/fips/140-2-sunset/ (2026-08-28)"
+    source_quality: primary
+    first_issue: 5
+
+  - id: bitmex-closure
+    what: "BitMEX ceases exchange operations; withdrawal-only access afterwards"
+    deadline: 2026-09-23
+    time: "04:00:00"
+    action: "Withdraw; balances left behind are charged $50/mo or 1%/yr, whichever is greater"
+    source: "https://www.bitmex.com/blog/bitmex-closure (2026-07-23)"
+    source_quality: primary
+    first_issue: 1
+
+  - id: phantom-drops-sui
+    what: "Phantom stops showing, sending and swapping Sui assets (Monad dropped the same way on 2026-08-26)"
+    deadline: 2026-09-24
+    time: null
+    action: "Swap inside Phantom or move the seed phrase to a Sui-compatible wallet (Slush)"
+    source: "https://help.phantom.com/articles/ending-support-for-sui-in-phantom-53868478441491 (2026-08-24)"
+    source_quality: primary
+    first_issue: 5
+
+  - id: router-protocol-shutdown
+    what: "Router Protocol winds down cross-chain operations and burns 303,333,198 ROUTE from the treasury — over 30% of the 1 bn max supply. DefiLlama showed $9,879.92 locked and no bridge volume over 30 completed days when the plan was reported"
+    deadline: 2026-09-30
+    time: null
+    action: "Bridge out and withdraw from centralized venues before their own delisting deadlines — the notice points at venue deadlines, not at one common date"
+    source: "https://crypto.news/router-protocol-to-shut-down-burn-303m-route-tokens (2026-09-05); https://thedefiant.io/news/defi/router-protocol-plans-sept-30-shutdown-and-303-million-route-burn"
+    source_quality: secondary   # первоисточник не достаётся: routerprotocol.com — JS-оболочка
+                                # без текста, blog.routerprotocol.com не резолвится.
+                                # Проверено 2026-09-12: в docs.routerprotocol.com объявления
+                                # НЕТ вообще — читающий доки об отключении не узнает.
+    first_issue: 7
+
+  - id: alchemy-nft-api-endpoints
+    what: "Alchemy removes 11 NFT API endpoints (V2 and V3); isAirdrop/isAirdropNFT and getNFTSales have no replacement"
+    deadline: 2026-09-30
+    time: null
+    action: "Move calls to the V3 replacements; for the two without one, decide the substitute now"
+    source: "https://www.alchemy.com/docs/changelog (2026-08-18)"
+    source_quality: primary
+    first_issue: 4
+
+  - id: layerzero-offchain-0930
+    what: "LayerZero ends offchain services for Aurora, Taiko, BounceBit, Japan Open Chain, LightLink; Stargate v2 drops Aurora, Taiko, LightLink"
+    deadline: 2026-09-30
+    time: null
+    action: "Withdraw LP positions; bridge USDC.e, USDT and ETH to a supported chain"
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24)"
+    source_quality: primary
+    first_issue: 2
+
+  - id: ipfs-shipyard-end
+    what: "Shipyard ends IPFS maintenance and public infrastructure: ipfs.io, dweb.link, delegated-ipfs.dev, bootstrap nodes; Kubo/Helia/Boxo/Rainbow left without dedicated maintainers. Rate limiting on ipfs.io/dweb.link already in effect since 2026-08-25"
+    deadline: 2026-09-30
+    time: null
+    action: "Leave public gateways: @helia/verified-fetch in the browser, your own node (Rainbow/Someguy/Kubo) or a paid gateway on the backend"
+    source: "https://ipshipyard.com/blog/2026-the-end-of-ipfs-at-shipyard/ · https://blog.ipfs.tech/2026-08-beyond-sponsored-gateways/"
+    source_quality: primary
+    first_issue: 5
+
+  - id: sui-jsonrpc-removal
+    what: "Sui JSON-RPC fully decommissioned, including code removal"
+    deadline: 2026-10-15   # docs say 'mid-October 2026'; exact day not stated
+    time: null
+    date_precision: month
+    action: "Finish migrating to gRPC or GraphQL RPC; confirm your provider offers them"
+    source: "https://docs.sui.io/references/sui-api"
+    source_quality: primary
+    first_issue: 1
+
+  - id: solana-rent-phases-3-5
+    what: "Solana rent reduction phases 3-5 (SIMD-0437-3/4/5): lamports_per_byte down to 2,575 -> 1,322 -> 696 (-90% against the original 6,960), expected with Agave 4.4. An empty account ends at 89,088 lamports"
+    deadline: 2026-11-15
+    time: null
+    date_precision: month   # source says 'November 2026'
+    action: "Same as phase 2: no hardcoded rent constants anywhere in client or program code"
+    source: "https://solana.com/upgrades/reduced-rent"
+    source_quality: primary
+    first_issue: 6
+
+  - id: gcp-blockchain-node-engine
+    what: "Google Cloud Blockchain Node Engine and Blockchain RPC shut down"
+    deadline: 2026-12-15
+    time: null
+    action: "Provision replacement endpoints (Google points to QuickNode), repoint apps, delete legacy nodes"
+    source: "https://docs.cloud.google.com/blockchain-node-engine/docs/migrate-to-quicknode"
+    source_quality: primary
+    first_issue: 1
+
+  - id: polygon-zkevm-claims
+    what: "Polygon zkEVM claims window closes; unclaimed migrated assets considered abandoned"
+    deadline: 2027-12-31
+    time: null
+    action: "Claim exit-snapshot balances on Ethereum via the claims interface"
+    source: "https://forum.polygon.technology/t/polygon-zkevm-mainnet-beta-sunset-claim-your-funds/21856"
+    source_quality: primary
+    first_issue: 1
+
+  - id: hoodi-eol
+    what: "Ethereum Hoodi testnet end-of-life (planned lifecycle)"
+    deadline: 2028-09-01
+    time: null
+    date_precision: month
+    action: "None yet — the point is that the date exists up front"
+    source: "Ethereum Foundation testnet lifecycle policy (Holesky shutdown announcement, 2025-09-01)"
+    source_quality: primary
+    first_issue: 1
+
+# Expired within the covered window — reported once as 'already in effect', then archived.
+
+closed:
+  - id: bitmex-reduce-only-xbt
+    what: "BitMEX set XBTUSD and XBTUSDT to Reduce Only — the last pair of contracts to lose the ability to open new positions"
+    effective: 2026-09-10   # 04:00 UTC
+    verified: partial   # см. bitmex-reduce-only-futures
+    source: "https://www.bitmex.com/blog/reduce-only-september (2026-09-03)"
+    reported_issue: 6
+
+  - id: harmony-l1-halt
+    what: "Harmony stopped producing blocks. Users were urged to exit smart contracts before 2026-09-10 and validators were allowed to switch off from 07:00 PT that day; the last shard-0 block 93,624,315 was mined at 14:41:43 UTC, 41 minutes after the earliest permitted shutdown, and shard 1 stopped at 14:52:47 UTC. The urged exit date turned out to be the final block. Frozen behind it: 420.5M ONE (~$270k) on contracts inside the top-1000 addresses, of which 91.3M in Wrapped ONE and 75.6M in the BSC/Ethereum bridge lockboxes; 2.93bn ONE staked (~$1.88M) is promised to migrate into governor vaults. No ERC-20 ONE contract address exists yet"
+    effective: 2026-09-10
+    verified: yes   # собственный замер 2026-09-11: eth_blockNumber/eth_getBlockByNumber на
+                    # api.harmony.one и 1rpc.io/one плюс индексатор explorer.harmony.one —
+                    # три независимые точки, один и тот же номер и timestamp.
+                    # Протокол: ../scout/notes/harmony-residue-2026-09-11.md
+    source: "https://www.coindesk.com/markets/2026/09/07/once-hyped-ethereum-rival-harmony-wants-to-shut-its-blockchain-over-ai-threats (объявление 2026-09-06); факт остановки — собственный замер"
+    first_issue: 7
+
+  - id: bitmex-reduce-only-eth
+    what: "BitMEX set ETHUSD and ETHUSDT to Reduce Only"
+    effective: 2026-09-08   # 04:00 UTC
+    verified: partial   # см. bitmex-reduce-only-futures
+    source: "https://www.bitmex.com/blog/reduce-only-september (2026-09-03)"
+    reported_issue: 6
+
+  - id: bitmex-reduce-only-futures
+    what: "BitMEX set the remaining futures (ETHUSDU26, XBTU26, XBTZ26, XBTH27) to Reduce Only"
+    effective: 2026-09-07   # 04:00 UTC по объявлению
+    verified: partial   # режим Reduce Only публичным API не наблюдается: /instrument отдаёт
+                        # state=Open и у перпов, и у фьючерсов. Что проверено 2026-09-12:
+                        # расписание на странице объявления прежнее, в ленте
+                        # /api/v1/announcement после 2026-09-01 нет ни одной правки,
+                        # а сами фьючерсы несут settle/expiry 2026-09-16 — план идёт.
+    source: "https://www.bitmex.com/blog/reduce-only-september (2026-09-03)"
+    reported_issue: 6
+
+  - id: solana-rent-phase-1
+    what: "Solana rent reduction phase 1 (SIMD-0437-1) live on mainnet: lamports_per_byte 6,960 -> 6,333 (-9%), so the rent-exempt minimum of an empty account goes 891,520 -> 810,624; excess lamports on existing accounts became reclaimable"
+    effective: 2026-09-03
+    source: "https://solana.com/upgrades/reduced-rent · https://solana.com/news/how-to-reclaim-excess-sol-after-rent-reduction"
+    reported_issue: 6
+
+  - id: bitmex-delist-11-perps
+    what: "BitMEX settled 11 delisted perpetual swaps"
+    effective: 2026-09-02   # 12:00 UTC
+    verified: yes   # 2026-09-04, GET /api/v1/instrument: SOLUSDT, SOLUSD, XRPUSD, XRPUSDT,
+                    # BNBUSD, BNBUSDT, LINKUSD, SUIUSDT — state Settled, settle
+                    # 2026-09-02T12:00:00Z секунда в секунду. Трёх из одиннадцати
+                    # (HYPEUSDT, NEARUSDT, XAUTUSDT) не было в окне выдачи из 500.
+    source: "https://www.bitmex.com/blog/delisting-sep2026 (2026-08-18)"
+    reported_issue: 6
+  # chainlink-three-feeds-0902 переехал обратно в `open` 2026-09-04:
+  # живая проверка показала, что объявленный срок прошёл, а фиды работают.
+
+  - id: scrt-labs-ends-secret
+    what: "SCRT Labs ended development and support of the Cosmos-based Secret L1; network continues community-maintained (proposal 365 passed 2026-08-19, v1.26.0-community-continuance 2026-08-21)"
+    effective: 2026-09-01
+    source: "https://forum.scrt.network/t/signaling-proposal-migrate-scrt-to-arbitrum-via-snapshot/8006 (2026-07-21); on-chain gov proposals 360/365"
+    reported_issue: 5
+
+  - id: ton-bridge-v3-shutdown
+    what: "TON Bridge-v3 permanently shut down. Own measurements 2026-08-26 and 2026-09-02: 0.11% of wrapped TON left in the final week; 11,344,909 wTON (≈$14.9m) plus ≈$586k j-tokens stuck"
+    effective: 2026-09-01
+    source: "TON announcement 2026-05-23; script smm/hub/2026-W35/assets/ton-bridge-scan.py"
+    reported_issue: 6   # #05 carried the first measurement; #06 closes it
+
+  - id: etherscan-gnosis-paid
+    what: "Etherscan Gnosis community API endpoints require Lite plan or higher"
+    effective: 2026-09-01   # по объявлению
+    verified: no   # 2026-09-04: API v2 требует ключ на любой сети, запрос без ключа
+                   # к chainid=100 и chainid=1 даёт одинаковое Missing/Invalid API Key;
+                   # docs.etherscan.io/supported-chains на 04.09 всё ещё пишет о переходе
+                   # будущим временем. Своего ключа нет — проверка невозможна.
+    source: "https://docs.etherscan.io/changelog (entry 2026-07-24)"
+    reported_issue: 6
+
+  - id: polygon-dockerhub-sunset
+    what: "Polygon stopped publishing Bor/Heimdall images to DockerHub; releases only on GHCR"
+    effective: 2026-09-01   # по объявлению
+    verified: pending   # 2026-09-04: последние теги на DockerHub — bor 2.10.1 (26.08),
+                        # heimdall-v2 0.11.0 (18.08), оба до срока; релизов после 26.08
+                        # не было, поэтому отсутствие образов ничего не доказывает.
+                        # Проверить после первого релиза, вышедшего позже 01.09.
+    source: "https://forum.polygon.technology/t/announcement-ghcr-images-and-docker-sunset/22022"
+    reported_issue: 6
+
+  - id: layerzero-pricing
+    what: "LayerZero: Stargate app OFT transfers carry up to 2 bps (cap $250); minimum Executor fee $0.25"
+    effective: 2026-09-01   # по объявлению
+    source: "https://layerzero.network/blog/pricing-updates (2026-08-11)"
+    reported_issue: 6
+
+  - id: safer-archived
+    what: "morpho-org/safer archived (181 stars): the CLI fallback for signing Safe transactions without Safe's own frontend/backend is no longer maintained"
+    effective: 2026-09-01
+    source: "https://github.com/morpho-org/safer"
+    reported_issue: 6
+
+  - id: degen-chain-shutdown
+    what: "Degen Chain (L3) shut down; Alchemy ended degen-mainnet support. LayerZero offchain services for Degen went first (2026-08-28)"
+    effective: 2026-08-31
+    source: "https://www.alchemy.com/docs/changelog (2026-08-24)"
+    reported_issue: 5
+
+  - id: optimism-subblocks-zeroed
+    what: "OP Mainnet moved to a 200 ms subblock interval and zeroed four stream payload fields: state_root, block_hash, withdrawals_root, withdrawals. Wire format unchanged, no errors raised; receipts_root and logs_bloom still carry real values. OP Sepolia got it on 2026-08-17"
+    effective: 2026-08-31
+    source: "https://docs.optimism.io/notices/subblocks"
+    reported_issue: 6
+
+  - id: balancer-frontend-v2-archived
+    what: "balancer/frontend-v2 archived (196 stars) while its README still promises to maintain the veBAL page until that page moves to the new UI"
+    effective: 2026-08-31
+    source: "https://github.com/balancer/frontend-v2"
+    reported_issue: 6
+
+  - id: dfk-chain-retired
+    what: "DFK Chain stopped; last block 62472734 at 2026-08-29 04:25 UTC, a day after the announced date. Final own measurement: $235,970 left in pools across 577 pairs, 41.2% in the retired Master Gardener"
+    effective: 2026-08-29
+    source: "DeFi Kingdoms announcement 2026-07-31 (X); own scanner tools/dfk-chain-sunset, five measurements 04.08–31.08"
+    reported_issue: 5
+
+  - id: layerzero-offchain-0828
+    what: "LayerZero ended offchain services (DVN + Executor) for 10 chains incl. DFK Chain, Arbitrum Nova, Sophon"
+    effective: 2026-08-28
+    source: "https://layerzero.network/blog/support-update-july-24-2026"
+    reported_issue: 5
+
+  - id: bitmex-convert-11-tokens
+    what: "BitMEX ended Convert for 11 tokens"
+    effective: 2026-08-28   # 04:00 UTC
+    source: "https://www.bitmex.com/blog/"
+    reported_issue: 5
+
+  - id: polygon-heimdall-no-sla
+    what: "Polygon declares heimdall-api.polygon.technology and heimdall-api-amoy.polygon.technology best-effort: no uptime target, no latency guarantee, no support commitment, rate limits may change without notice. No shutdown date — the obligations are removed, not the endpoint"
+    effective: 2026-08-28
+    source: "https://forum.polygon.technology/t/public-heimdall-rpc-endpoints-are-best-effort-no-sla/22145"
+    reported_issue: 6
+
+  - id: bitmex-no-new-positions
+    what: "BitMEX blocked opening new positions; force-close began"
+    effective: 2026-08-26   # 04:00 UTC
+    source: "https://www.bitmex.com/blog/bitmex-closure (2026-07-23)"
+    reported_issue: 5
+
+  - id: hypersdk-archived
+    what: "ava-labs/hypersdk archived with hypersdk-explorer, -client, -starter-kit; last commit 2025-05-16, no notice, no successor"
+    effective: 2026-08-21
+    source: "https://github.com/ava-labs/hypersdk"
+    reported_issue: 4
+
+  - id: maci-archived
+    what: "privacy-ethereum/maci archived; 3.0.0 moved to @maci-protocol/*, old maci-cli stays at 2.5.0 (2024-11-20) without a deprecated flag"
+    effective: 2026-08-19
+    source: "https://github.com/privacy-ethereum/maci"
+    reported_issue: 4
+
+  - id: chainlink-batch-0819
+    what: "Chainlink shut down the batch announced on 2026-08-21 with a shutdownDate of 2026-08-19 — the announcement came two days after the fact. Verified dead on-chain 2026-09-04 (execution reverted): C3M/EUR, MAVIA/USD, USR/USD, PumpBTC/BTC on Ethereum; ZAR/USD on BNB Chain; 13 Datalink/Streams entries on Arbitrum carry the same date. Seven Sonic feeds went the same way, reported in #05"
+    effective: 2026-08-19
+    verified: yes   # own eth_call on the proxies, 2026-09-04 08:59 UTC
+    source: "https://dev.chain.link/changelog (2026-08-21); reference-data-directory.vercel.app/feeds-mainnet.json"
+    reported_issue: 6
+
+  - id: gnosisscan-explorer
+    what: "Gnosisscan block explorer discontinued (Etherscan family)"
+    effective: 2026-08-11   # 23:59 UTC; первый срок доски, наступивший по объявлению — разбор в #03
+    source: "https://docs.etherscan.io/changelog (entry 2026-07-24)"
+    reported_issue: 3
+
+  - id: bitmex-convert-tokens
+    what: "BitMEX ended Convert support for 5 tokens"
+    effective: 2026-08-05
+    source: "https://www.bitmex.com/blog/ (2026-07-30)"
+    reported_issue: 1
+
+  - id: zapper-shutdown
+    what: "Zapper shut down site, mobile apps and API"
+    effective: 2026-08-03
+    source: "https://x.com/zapper_fi (2026-07-08)"
+    reported_issue: 1
+
+  - id: polygon-erigon-sunset
+    what: "Polygon Labs sunsets Erigon on Polygon PoS; erigon_* and some trace_* methods go away"
+    effective: 2026-08-01   # QuickNode cut earlier: Amoy 2026-07-01, Mainnet 2026-07-15
+    source: "https://forum.polygon.technology/t/sunsetting-erigon-support/21872"
+
+  - id: alchemy-botanix
+    what: "Alchemy ends Botanix mainnet/testnet support as the networks shut down"
+    effective: 2026-08-01
+    source: "https://www.alchemy.com/docs/changelog"
+
+  - id: quicknode-drops-zkevm-sophon
+    what: "QuickNode removes Polygon zkEVM and Sophon (mainnet + testnet) and their docs"
+    effective: 2026-07-31   # записано в changelog 2026-08-17
+    source: "https://www.quicknode.com/docs/changelog"
+    reported_issue: 4
+
+  - id: polygon-public-rpc
+    what: "Polygon public RPC endpoints retired (polygon-rpc.com, rpc-mainnet/rpc-amoy.polygon.technology)"
+    effective: 2026-07-31   # Amoy 2026-07-17
+    source: "https://forum.polygon.technology/t/deprecation-of-polygons-public-rpc-endpoints-mainnet-amoy/22014 (2026-07-14)"
+    reported_issue: 2
+
+  - id: layerzero-offchain-0730-0731
+    what: "LayerZero ended offchain services for Botanix (07-30), Moonriver, Moonbeam, Nexera, Canto (07-31)"
+    effective: 2026-07-31
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24)"
+    reported_issue: 2
+
+  - id: etherscan-moonbeam
+    what: "Etherscan drops Moonbeam (1284), Moonriver (1285), Moonbase Alpha (1287)"
+    effective: 2026-07-31
+    source: "https://docs.etherscan.io/changelog"
+
+  - id: sui-jsonrpc-disabled
+    what: "Sui JSON-RPC disabled on Sui Foundation mainnet full nodes"
+    effective: 2026-07-27   # 'week of July 27, 2026'
+    source: "https://docs.sui.io/references/sui-api"
+
+  - id: porto-funds-deadline
+    what: "Porto sunset: funds were to be moved out before 2026-07-24; repo archived 2026-08-03"
+    effective: 2026-07-24
+    source: "https://ithaca.xyz/updates/sunsetting-porto (2026-06-19)"
+    reported_issue: 2
+
+  - id: etherscan-celo-shared-pool
+    what: "Etherscan Celo free tier becomes a shared pool per chain"
+    effective: 2026-07-16
+    source: "https://docs.etherscan.io/changelog"
+
+  - id: etherscan-pagination-cut
+    what: "Etherscan free-tier pagination cut 10,000 -> 1,000 records per request"
+    effective: 2026-07-01
+    source: "https://docs.etherscan.io/changelog (announced 2026-05-01)"
+
+  - id: etherscan-internal-txs-pro
+    what: "Etherscan internal transactions by block range moved to Pro"
+    effective: 2026-07-01
+    source: "https://docs.etherscan.io/changelog (announced 2026-05-01)"
+
+  - id: polygon-zkevm-sequencer
+    what: "Polygon zkEVM Mainnet Beta sequencer sunset; exit snapshot taken"
+    effective: 2026-07-01
+    source: "https://forum.polygon.technology/t/polygon-zkevm-mainnet-beta-sunset-claim-your-funds/21856"
