@@ -169,7 +169,6 @@ closed:
     verified: yes   # собственный замер 2026-09-11: eth_blockNumber/eth_getBlockByNumber на
                     # api.harmony.one и 1rpc.io/one плюс индексатор explorer.harmony.one —
                     # три независимые точки, один и тот же номер и timestamp.
-                    # Протокол: ../scout/notes/harmony-residue-2026-09-11.md
     source: "https://www.coindesk.com/markets/2026/09/07/once-hyped-ethereum-rival-harmony-wants-to-shut-its-blockchain-over-ai-threats (объявление 2026-09-06); факт остановки — собственный замер"
     first_issue: 7
 
@@ -218,7 +217,7 @@ closed:
   - id: ton-bridge-v3-shutdown
     what: "TON Bridge-v3 permanently shut down. Own measurements 2026-08-26 and 2026-09-02: 0.11% of wrapped TON left in the final week; 11,344,909 wTON (≈$14.9m) plus ≈$586k j-tokens stuck"
     effective: 2026-09-01
-    source: "TON announcement 2026-05-23; script smm/hub/2026-W35/assets/ton-bridge-scan.py"
+    source: "TON announcement 2026-05-23; figures from our own scan of the bridge contracts (script unpublished)"
     reported_issue: 6   # #05 carried the first measurement; #06 closes it
 
   - id: etherscan-gnosis-paid
@@ -274,7 +273,7 @@ closed:
   - id: dfk-chain-retired
     what: "DFK Chain stopped; last block 62472734 at 2026-08-29 04:25 UTC, a day after the announced date. Final own measurement: $235,970 left in pools across 577 pairs, 41.2% in the retired Master Gardener"
     effective: 2026-08-29
-    source: "DeFi Kingdoms announcement 2026-07-31 (X); own scanner tools/dfk-chain-sunset, five measurements 04.08–31.08"
+    source: "DeFi Kingdoms announcement 2026-07-31 (X); own scanner https://github.com/sergeipalii/dfk-chain-sunset, five measurements 04.08-31.08"
     reported_issue: 5
 
   - id: layerzero-offchain-0828
