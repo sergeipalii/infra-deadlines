@@ -3,41 +3,32 @@
 # All times UTC. `time: null` means the source stated a date but no time.
 # Keep sorted by deadline.
 
-updated: 2026-09-12
-issue: 5   # доведён до #05 задним числом 02.09; шаг 8 после #05 не выполнялся.
+updated: 2026-09-18
+issue: 7   # 18.09 свип #07: живая сверка закрыла три срока (Chainlink 16.09, Solana 11.09,
+           # BitMEX 16.09), LayerZero сдвинул Stargate на 23.09 — доска стояла на 30.09.
            # 04.09 добавлены находки свипа #06 и поправки живой сверки.
            # 12.09 доска доведена вне цикла выпуска: четыре строки висели
            # просроченными на публичной странице, а два события в неё не попали.
 
 open:
-  - id: chainlink-three-feeds-0902
-    what: "Chainlink lists CSPX/USD, IB01/USD and IBTA/USD (Ethereum) with shutdownDate 'September 2nd, 2026'. Re-checked on-chain 2026-09-12: all three still updating inside their 86400 s heartbeat — CSPX/USD 2026-09-11 07:30 UTC, IB01/USD 2026-09-11 08:20 UTC, IBTA/USD 2026-09-11 19:59 UTC. Ten days past the announced date the feeds are alive; the directory now labels them feedCategory 'deprecating'"
-    deadline: 2026-09-02
-    time: null
-    overdue: true   # срок прошёл, событие не наступило — держим открытым до факта
-    action: "Do not treat the directory date as the switch-off: check updatedAt on the proxy before and after any announced date"
-    source: "https://dev.chain.link/changelog (2026-08-21); reference-data-directory.vercel.app/feeds-mainnet.json; own on-chain checks 2026-09-04 08:59 UTC and 2026-09-12 05:20 UTC via eth.drpc.org"
-    source_quality: primary
-    first_issue: 6
-
-  - id: solana-rent-phase-2
-    what: "Solana rent reduction phase 2 (SIMD-0437-2): lamports_per_byte 6,333 -> 5,080 (the SIMD labels it 6,960 -> 5,080 against the original constant, -27%). The rent-exempt minimum is (128 + data bytes) x that, so an empty account goes 810,624 -> 650,240 lamports. Phase 1 (6,960 -> 6,333 per byte) went live on mainnet 2026-09-03"
-    deadline: 2026-09-15
-    time: null
-    date_precision: month   # source says 'mid-September 2026'
-    action: "Replace hardcoded rent constants with getMinimumBalanceForRentExemption() on the client and Rent::get() on-chain; reclaim excess lamports via WithdrawExcessLamports"
-    source: "https://solana.com/upgrades/reduced-rent"
-    source_quality: primary
-    first_issue: 6
-
-  - id: bitmex-final-delisting
-    what: "BitMEX delists and early-settles all remaining derivatives: 4 perpetual swaps (XBTUSD, XBTUSDT, ETHUSD, ETHUSDT) and 4 futures. Funding stops accruing at T start 04:00; settlement at 12:00 against .BXBT30M / .BETH30M and their USDT twins"
+  - id: "chainlink-feeds-0916"
+    what: "Chainlink scheduled DOLO/USD (Arbitrum), plUSD/USDT (Plasma) and USD0++/USD (Ethereum) for deprecation on 2026-09-16. Checked on-chain 2026-09-18 ~03:22 UTC: USD0++/USD updated 2026-09-17 17:41:23 UTC, DOLO/USD 2026-09-18 03:18:15 UTC — both alive; plUSD/USDT not checked"
     deadline: 2026-09-16
+    time: null
+    overdue: true   # срок прошёл, фиды живы — держим открытым до факта
+    action: "Watch updatedAt on the proxy, not the directory date; move off before it happens"
+    source: "https://dev.chain.link/changelog/feeds-scheduled-for-deprecation-f1f2a (2026-09-04); own on-chain check 2026-09-18"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "bitmex-spot-delisting"
+    what: "BitMEX delists all 7 remaining spot pairs (XBT_USDT, ETH_USDT, BMEX_USDT, SOL_USDT, RLUSD_USDT, XRP_USDT, XAUT_USDT); open orders are cancelled"
+    deadline: 2026-09-21
     time: "12:00:00"
-    action: "Close positions manually if a 30-minute-index settlement price does not suit you — this, not 2026-09-23, is the day trading actually ends"
-    source: "https://www.bitmex.com/blog/reduce-only-september (2026-09-03)"
-    source_quality: primary
-    first_issue: 6
+    action: "Close spot positions yourself before 12:00 UTC"
+    source: "https://www.bitmex.com/blog/delisting-spot-convert-sept2026 (2026-09-15)"
+    source_quality: "primary"
+    first_issue: 7
 
   - id: fips-140-2-historical
     what: "CMVP moves all remaining FIPS 140-2 certificates to the historical list (492 active on 2026-08-28)"
@@ -48,6 +39,33 @@ open:
     source_quality: primary
     first_issue: 5
 
+  - id: "alchemy-7702-default-v110"
+    what: "Alchemy Wallet APIs: new EIP-7702 accounts created via wallet_prepareCalls / wallet_requestAccount delegate by default to SemiModularAccount7702 v1.1.0 (0x77021100bD87b7008E5E1989d0eB38555d0d0000) instead of v1.0.0; existing accounts unchanged"
+    deadline: 2026-09-21
+    time: null
+    action: "If you recognise accounts by delegate address or accountId(), allow v1.1.0 alongside v1.0.0 — or pin new accounts to v1.0.0"
+    source: "https://www.alchemy.com/docs/changelog (2026-08-20, repeated 2026-08-24)"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "cosmos-hub-v28-2"
+    what: "Cosmos Hub upgrades to Gaia v28.2.0 — the full fix for the vulnerability behind the private emergency v28.1.0 patch — at height 33,073,000, if expedited proposal 1055 passes (voting ends 2026-09-20 14:59:29 UTC). The date is our estimate from block time (~13:20 UTC); no time was announced, the forum says 'Monday morning'"
+    deadline: 2026-09-21
+    time: null
+    action: "Validators and node operators: have the v28.2.0 binary ready before height 33,073,000"
+    source: "https://forum.cosmos.network/t/17331 (2026-09-17); proposal 1055 on-chain"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "bitmex-convert-end"
+    what: "BitMEX removes Convert for all remaining tokens (XBT, ETH, SOL, XRP, USDT, USDC); withdrawals continue"
+    deadline: 2026-09-22
+    time: "04:00:00"
+    action: "Convert odd balances before 04:00 UTC — afterwards you withdraw whatever token you hold"
+    source: "https://www.bitmex.com/blog/delisting-spot-convert-sept2026 (2026-09-15)"
+    source_quality: "primary"
+    first_issue: 7
+
   - id: bitmex-closure
     what: "BitMEX ceases exchange operations; withdrawal-only access afterwards"
     deadline: 2026-09-23
@@ -57,6 +75,24 @@ open:
     source_quality: primary
     first_issue: 1
 
+  - id: "base-cobalt-sepolia"
+    what: "Base Cobalt hardfork on Base Sepolia; node releases now come from base/base (v1.4.0+) as ghcr.io/base/node — base/node was archived 2026-09-08 and the node-reth image is deprecated"
+    deadline: 2026-09-23
+    time: "18:00:00"
+    action: "Switch builds to base/base v1.4.0+ and ghcr.io/base/node; drop --rollup.disable-tx-pool-gossip"
+    source: "https://github.com/base/base/releases/tag/v1.4.0 (2026-09-16); https://docs.base.org/upgrades/cobalt/overview"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "layerzero-stargate-0923"
+    what: "Stargate v2 drops Aurora, Taiko, LightLink and Gnosis — moved forward from 2026-09-30 by an update to the announcement on 2026-09-09"
+    deadline: 2026-09-23
+    time: null
+    action: "Withdraw S*USDC / S*ETH LP; bridge USDC.e, USDT and ETH out"
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24, updated 2026-09-09)"
+    source_quality: "primary"
+    first_issue: 7
+
   - id: phantom-drops-sui
     what: "Phantom stops showing, sending and swapping Sui assets (Monad dropped the same way on 2026-08-26)"
     deadline: 2026-09-24
@@ -65,6 +101,15 @@ open:
     source: "https://help.phantom.com/articles/ending-support-for-sui-in-phantom-53868478441491 (2026-08-24)"
     source_quality: primary
     first_issue: 5
+
+  - id: "op-upgrade-20-mainnet"
+    what: "OP Stack Upgrade 20 on mainnet (OP, Ink, Unichain, Soneium): Super Root dispute games (types 5 and 9); SystemConfig loses batchInbox() and setGasConfig(uint256,uint256), overhead() returns 0. Source warns 'these dates can move'"
+    deadline: 2026-09-24
+    time: null
+    action: "Upgrade viem to 2.51.0+ and rewrite the withdrawal prove flow; remove calls to batchInbox(), setGasConfig() and reads of overhead()"
+    source: "https://docs.optimism.io/notices/upgrade-20"
+    source_quality: "primary"
+    first_issue: 7
 
   - id: router-protocol-shutdown
     what: "Router Protocol winds down cross-chain operations and burns 303,333,198 ROUTE from the treasury — over 30% of the 1 bn max supply. DefiLlama showed $9,879.92 locked and no bridge volume over 30 completed days when the plan was reported"
@@ -87,13 +132,13 @@ open:
     source_quality: primary
     first_issue: 4
 
-  - id: layerzero-offchain-0930
-    what: "LayerZero ends offchain services for Aurora, Taiko, BounceBit, Japan Open Chain, LightLink; Stargate v2 drops Aurora, Taiko, LightLink"
+  - id: "layerzero-offchain-0930"
+    what: "LayerZero ends offchain (DVN/executor) services for Aurora, Taiko, BounceBit, Japan Open Chain, LightLink — and, added on 2026-09-09, Otherworld Space, Viction, Anime, XPLA, Merlin, Gnosis, Zora, Xai, opBNB. The page warns: 'Impacted chains and dates subject to change'"
     deadline: 2026-09-30
     time: null
     action: "Withdraw LP positions; bridge USDC.e, USDT and ETH to a supported chain"
-    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24)"
-    source_quality: primary
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24, updated 2026-09-09)"
+    source_quality: "primary"
     first_issue: 2
 
   - id: ipfs-shipyard-end
@@ -105,6 +150,42 @@ open:
     source_quality: primary
     first_issue: 5
 
+  - id: "base-cobalt-mainnet"
+    what: "Base Cobalt hardfork on Base Mainnet (time not announced; the general upgrades page still says 'Targeting September 2026')"
+    deadline: 2026-09-30
+    time: null
+    action: "Run base/base v1.4.0+ before the fork"
+    source: "https://docs.base.org/upgrades/cobalt/overview"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "stargate-bus-end"
+    what: "Stargate Bus mode ends; all transfers go through Taxi"
+    deadline: 2026-10-01
+    time: null
+    action: "Re-check fee assumptions in integrations built on Bus batching"
+    source: "https://layerzero.network/blog/ecosystem-update-september-2026 (2026-09-15)"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "chainlink-lasttradedprice"
+    what: "Chainlink deprecates lastTradedPrice on 24/5 U.S. Equity Streams: after this date the field is not monitored for availability or quality"
+    deadline: 2026-10-12
+    time: null
+    action: "Stop using lastTradedPrice as an execution price; move to mid/bid/ask"
+    source: "https://dev.chain.link/changelog/lasttradedprice-deprecated-on-245-u-s--equity-streams (2026-09-10)"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "circle-noble-mint-end"
+    what: "Circle disables new minting of USDC on Noble through Circle Mint (redemption continues until 2027-01-12). First of five dates in Circle's exit from Noble; no times of day are given for any of them"
+    deadline: 2026-10-13
+    time: null
+    action: "Move USDC.n off Noble-denominated routes: migrate to USDC.inj (Skip:Go, Keplr banner, Osmosis 1:1 transmuter) or withdraw via an exchange"
+    source: "https://www.circle.com/blog/circle-is-discontinuing-support-for-usdc-and-cctp-v1-on-noble (2026-09-10)"
+    source_quality: "primary"
+    first_issue: 7
+
   - id: sui-jsonrpc-removal
     what: "Sui JSON-RPC fully decommissioned, including code removal"
     deadline: 2026-10-15   # docs say 'mid-October 2026'; exact day not stated
@@ -114,6 +195,44 @@ open:
     source: "https://docs.sui.io/references/sui-api"
     source_quality: primary
     first_issue: 1
+
+  - id: "sns-sol-resolution-pause"
+    what: "SNS pauses resolution of .sol domains in the official SDKs at slot 452,825,395; existing domains become .sns. The source gives a slot, not a day — the date here is SNS's own 'mid to late October' target; our estimate from slot rate is ~2026-10-06..10"
+    deadline: 2026-10-15
+    time: null
+    date_precision: "month"
+    action: "Upgrade SNS SDKs (JS v3->v4, Kit v0.10->v1, Rust v1->v2), switch displayed suffix to .sns, do not rely on .sol resolution in payment flows"
+    source: "https://dev.sns.id/docs/migration; https://www.sns.id/blog/domain-upgrade (2026-08-03)"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "etherscan-arc-robinhood-paid"
+    what: "Etherscan: community endpoints for Arc Mainnet (5042) and Robinhood Chain (4663) — free until 2026-10-15 — require Lite or above; networks now arrive with the date their free access ends"
+    deadline: 2026-10-16
+    time: null
+    action: "Budget for Lite or read from your own RPC/indexer"
+    source: "https://docs.etherscan.io/changelog (2026-09-16)"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "circle-cctp-v1-burn-limits"
+    what: "CCTP V1 burn limits start reducing towards zero (Circle's Noble exit)"
+    deadline: 2026-10-31
+    time: null
+    action: "Exit Noble via CCTP V1 before limits shrink"
+    source: "https://www.circle.com/blog/circle-is-discontinuing-support-for-usdc-and-cctp-v1-on-noble (2026-09-10)"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "layerzero-testnets-phaseout"
+    what: "LayerZero narrows testnet support to 'roughly ten prioritized testnets'; the rest are phased out 'by the end of October' (list promised in the docs)"
+    deadline: 2026-10-31
+    time: null
+    date_precision: "month"
+    action: "Check whether your testnet stays; plan a move if not"
+    source: "https://layerzero.network/blog/ecosystem-update-september-2026 (2026-09-15)"
+    source_quality: "primary"
+    first_issue: 7
 
   - id: solana-rent-phases-3-5
     what: "Solana rent reduction phases 3-5 (SIMD-0437-3/4/5): lamports_per_byte down to 2,575 -> 1,322 -> 696 (-90% against the original 6,960), expected with Agave 4.4. An empty account ends at 89,088 lamports"
@@ -125,6 +244,15 @@ open:
     source_quality: primary
     first_issue: 6
 
+  - id: "circle-cctp-v1-pause"
+    what: "CCTP V1 (Legacy) contracts are paused on all chains; from Noble, exits 'may be limited' to chains still supporting V1 burns"
+    deadline: 2026-12-01
+    time: null
+    action: "Migrate integrations to CCTP V2; drop Noble routes"
+    source: "https://www.circle.com/blog/migrate-to-cctp-v2-ahead-of-cctp-v1-legacy-deprecation; https://www.circle.com/blog/circle-is-discontinuing-support-for-usdc-and-cctp-v1-on-noble"
+    source_quality: "primary"
+    first_issue: 7
+
   - id: gcp-blockchain-node-engine
     what: "Google Cloud Blockchain Node Engine and Blockchain RPC shut down"
     deadline: 2026-12-15
@@ -133,6 +261,33 @@ open:
     source: "https://docs.cloud.google.com/blockchain-node-engine/docs/migrate-to-quicknode"
     source_quality: primary
     first_issue: 1
+
+  - id: "layerzero-v1-relayer"
+    what: "LayerZero Labs Relayer for Endpoint v1 (ULNv2) deprecated; apps pinned to ULNv2 get 'messages unable to be executed'. V1 bug bounty closes the same day"
+    deadline: 2026-12-15
+    time: null
+    action: "Move OApp v1 config to ULNv301 or run your own relayer"
+    source: "https://layerzero.network/blog/ongoing-security-updates-3 (2026-08-07); https://layerzero.network/blog/ecosystem-update-september-2026 (2026-09-15)"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "stg-zro-conversion-end"
+    what: "STG -> ZRO conversion ends"
+    deadline: 2026-12-15
+    time: null
+    action: "Convert STG before the date"
+    source: "https://layerzero.network/blog/ecosystem-update-september-2026 (2026-09-15)"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "circle-noble-pause-snapshot"
+    what: "Noble USDC contract and CCTP routes fully paused; Circle snapshots all USDC balances on Noble. Manual redemption opens 2027-01-13 for 'a holder-controlled wallet' whose address is in the snapshot. The announcement does not say what happens to USDC held by pools, contracts or IBC escrow — which on 2026-09-18 03:21 UTC was 91,390,167 of 102,047,335 USDC on Noble (89.6%), held for other Cosmos chains"
+    deadline: 2027-01-12
+    time: null
+    action: "Hold USDC in a wallet you control on Noble itself, or off Noble entirely, before the pause"
+    source: "https://www.circle.com/blog/circle-is-discontinuing-support-for-usdc-and-cctp-v1-on-noble (2026-09-10); own read of api.noble.xyz supply and IBC total_escrow 2026-09-18"
+    source_quality: "primary"
+    first_issue: 7
 
   - id: polygon-zkevm-claims
     what: "Polygon zkEVM claims window closes; unclaimed migrated assets considered abandoned"
@@ -156,6 +311,65 @@ open:
 # Expired within the covered window — reported once as 'already in effect', then archived.
 
 closed:
+  - id: "chainlink-streams-0918"
+    what: "Chainlink scheduled ~57 Data Streams (ABBV, BAC, TSLA/USDT, WSTETH, WEETH, TBTC, LBTC, JITOSOL, tKalshi NAV and others) for deprecation on 2026-09-18 — announced 2026-09-16, two days ahead"
+    effective: 2026-09-18
+    verified: "no"   # у стримов нет публичного latestRoundData — снаружи не проверить
+    source: "https://dev.chain.link/changelog/streams-scheduled-for-deprecation-a165f (2026-09-16); https://docs.chain.link/data-streams/deprecating-streams"
+    first_issue: 7
+
+  - id: "archives-0915-0918"
+    what: "Archived: ton-blockchain/verifier (15.09, successor ton-blockchain/acton), thirdweb-dev/engine and thirdweb-dev/contracts (15.09, no notice), suiet/wallet-kit (18.09, no notice; npm package not marked deprecated)"
+    effective: 2026-09-18
+    verified: "yes"
+    source: "https://github.com/ton-blockchain/verifier; https://github.com/thirdweb-dev/engine; https://github.com/thirdweb-dev/contracts; https://github.com/suiet/wallet-kit (archivedAt via GraphQL)"
+    first_issue: 7
+
+  - id: "chainlink-three-feeds-0902"
+    what: "Chainlink switched off CSPX/USD, IB01/USD and IBTA/USD on Ethereum — 14 days after the 'September 2nd, 2026' shutdownDate in its directory. All three proxies had their aggregator set to the zero address in one block (25,992,685, 2026-09-16 21:20:23 UTC); latestRoundData reverts since. Last updates that day: CSPX 07:31:47, IB01 08:20:35, IBTA 20:01:47 UTC. The directory still lists them as 'deprecating' with the old date"
+    effective: 2026-09-16   # 21:20:23 UTC
+    verified: "yes"   # 2026-09-18: бисекция eth_call latestRoundData + aggregator() через eth.drpc.org
+    source: "https://dev.chain.link/changelog (2026-08-21); reference-data-directory.vercel.app/feeds-mainnet.json; own on-chain checks 2026-09-04, 09-12, 09-18"
+    first_issue: 6
+    reported_issue: 7
+
+  - id: "bitmex-final-delisting"
+    what: "BitMEX settled its last derivatives: XBTUSD, XBTUSDT, ETHUSD, ETHUSDT and futures ETHUSDU26, XBTU26, XBTZ26, XBTH27, all at 12:00:00 UTC (XBTUSD at 76,095.46). Not one derivative is left open; the only Open instruments are 7 spot pairs"
+    effective: 2026-09-16   # 12:00 UTC
+    verified: "yes"   # 2026-09-18, GET /api/v1/instrument: 8/8 Settled, settle 2026-09-16T12:00:00Z, OI 0
+    source: "https://www.bitmex.com/blog/reduce-only-september (2026-09-03)"
+    first_issue: 6
+    reported_issue: 7
+
+  - id: "solana-txv1-mainnet"
+    what: "Solana transaction v1 (SIMD-0296 + SIMD-0385) live on mainnet from epoch 1035; max transaction size 1,232 -> 4,096 bytes. Breaks readers, not senders: block/transaction requests without maxSupportedTransactionVersion: 1 fail on blocks containing v1; indexers must read limits from transactionConfig; fee sponsors scanning ComputeBudget lose their limits; older Yellowstone geyser builds downgrade v1 to v0"
+    effective: 2026-09-15   # ≈01:00 UTC по источнику
+    verified: "yes"
+    source: "https://solana.com/upgrades/larger-transaction-sizes; https://solana.com/news/solana-changelog-september-10-2026"
+    first_issue: 7
+
+  - id: "quicknode-ton-v1"
+    what: "QuickNode decommissioned its TON V1 API in favour of V2"
+    effective: 2026-09-15
+    verified: "no"
+    source: "https://www.quicknode.com/docs/changelog (2026-09-15)"
+    first_issue: 7
+
+  - id: "solana-rent-phase-2"
+    what: "Solana rent reduction phase 2 (SIMD-0437-2) live on mainnet from epoch 1033: lamports_per_byte 6,333 -> 5,080, an empty account's rent-exempt minimum 810,624 -> 650,240 lamports. solana.com still called it 'Live on Testnet' a week later"
+    effective: 2026-09-11   # 21:12:04 UTC, slot 446,256,000
+    verified: "yes"   # 2026-09-18: getMinimumBalanceForRentExemption(0)=650240 + activated_at фич-аккаунта
+    source: "https://solana.com/upgrades/reduced-rent; feature account 61BtM7BkDEE8Yq5fskEVAQT9mYA8qCejJWoLe5apqg81 on mainnet"
+    first_issue: 6
+    reported_issue: 7
+
+  - id: "xrpl-fixcleanup-3-3-0"
+    what: "XRPL amendment fixCleanup3_3_0 enabled in ledger 106,911,489 (31 of 35 votes); servers below xrpld 3.3.0 are amendment-blocked — cannot validate ledgers, process transactions or take part in consensus"
+    effective: 2026-09-11   # 11:29:00 UTC
+    verified: "yes"   # XRPScan API + RPC feature на xrplcluster.com, 2026-09-18
+    source: "https://xrpl.org/blog/2026/xrpld-3.3.0; https://api.xrpscan.com/api/v1/amendments"
+    first_issue: 7
+
   - id: bitmex-reduce-only-xbt
     what: "BitMEX set XBTUSD and XBTUSDT to Reduce Only — the last pair of contracts to lose the ability to open new positions"
     effective: 2026-09-10   # 04:00 UTC
@@ -179,6 +393,20 @@ closed:
     source: "https://www.bitmex.com/blog/reduce-only-september (2026-09-03)"
     reported_issue: 6
 
+  - id: "layerzero-superposition-0908"
+    what: "LayerZero ended offchain services and Stargate for Superposition on 2026-09-08 — a date added to the announcement on 2026-09-09, the day after it passed"
+    effective: 2026-09-08
+    verified: "no"   # живой проверки нет: как проверить DVN снаружи — неочевидно
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24, updated 2026-09-09)"
+    first_issue: 7
+
+  - id: "base-node-archived"
+    what: "base/node (68k stars) archived: 'Use releases from base/base… no longer maintained'; the node-reth image deprecated in base/base v1.3.0 (2026-09-01)"
+    effective: 2026-09-08   # 20:04 UTC
+    verified: "yes"
+    source: "https://github.com/base/node; https://github.com/base/base/releases/tag/v1.3.0"
+    first_issue: 7
+
   - id: bitmex-reduce-only-futures
     what: "BitMEX set the remaining futures (ETHUSDU26, XBTU26, XBTZ26, XBTH27) to Reduce Only"
     effective: 2026-09-07   # 04:00 UTC по объявлению
@@ -189,6 +417,13 @@ closed:
                         # а сами фьючерсы несут settle/expiry 2026-09-16 — план идёт.
     source: "https://www.bitmex.com/blog/reduce-only-september (2026-09-03)"
     reported_issue: 6
+
+  - id: "etherscan-katana-shared-pool"
+    what: "Etherscan moved Katana (747474) free-tier calls to one shared pool for the whole network, as with Celo in July: once the pool is exhausted, Free requests fail until reset"
+    effective: 2026-09-07
+    verified: "no"
+    source: "https://docs.etherscan.io/changelog (2026-09-07)"
+    first_issue: 7
 
   - id: solana-rent-phase-1
     what: "Solana rent reduction phase 1 (SIMD-0437-1) live on mainnet: lamports_per_byte 6,960 -> 6,333 (-9%), so the rent-exempt minimum of an empty account goes 891,520 -> 810,624; excess lamports on existing accounts became reclaimable"
@@ -223,20 +458,14 @@ closed:
   - id: etherscan-gnosis-paid
     what: "Etherscan Gnosis community API endpoints require Lite plan or higher"
     effective: 2026-09-01   # по объявлению
-    verified: no   # 2026-09-04: API v2 требует ключ на любой сети, запрос без ключа
-                   # к chainid=100 и chainid=1 даёт одинаковое Missing/Invalid API Key;
-                   # docs.etherscan.io/supported-chains на 04.09 всё ещё пишет о переходе
-                   # будущим временем. Своего ключа нет — проверка невозможна.
+    verified: yes   # 2026-09-18: v2 без ключа и с фальшивым ключом на chainid=100 отвечает 'Free API access is not supported for this chain', как Base и BSC
     source: "https://docs.etherscan.io/changelog (entry 2026-07-24)"
     reported_issue: 6
 
   - id: polygon-dockerhub-sunset
     what: "Polygon stopped publishing Bor/Heimdall images to DockerHub; releases only on GHCR"
     effective: 2026-09-01   # по объявлению
-    verified: pending   # 2026-09-04: последние теги на DockerHub — bor 2.10.1 (26.08),
-                        # heimdall-v2 0.11.0 (18.08), оба до срока; релизов после 26.08
-                        # не было, поэтому отсутствие образов ничего не доказывает.
-                        # Проверить после первого релиза, вышедшего позже 01.09.
+    verified: yes   # 2026-09-18: bor v2.10.2-beta (07.09), -preconf (08.09), -preconf2 (10.09) есть на GitHub и GHCR, на DockerHub нет; до 01.09 на DockerHub шли даже беты
     source: "https://forum.polygon.technology/t/announcement-ghcr-images-and-docker-sunset/22022"
     reported_issue: 6
 
