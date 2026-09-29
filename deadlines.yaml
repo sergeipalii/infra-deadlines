@@ -128,7 +128,7 @@ open:
     first_issue: 8
 
   - id: "sns-sol-resolution-pause"
-    what: "SNS pauses resolution of .sol domains in the official SDKs at slot 452,825,395; existing domains become .sns. The source gives a slot, not a day, and SNS's blog still says 'mid to late October' — at the measured slot rate (0.2675 s/slot on 2026-09-29) the slot lands on ~2026-10-03 04:15 UTC (04:00-21:00 across September's slot rates)"
+    what: "SNS pauses resolution of .sol domains in the official SDKs at slot 452,825,395; existing domains become .sns. The source gives a slot, not a day, and SNS's blog still says 'mid to late October' — at the measured slot rate (0.2675 s/slot on 2026-09-29) the slot lands on ~2026-10-03 04:25 UTC, or ~20:30 UTC the same day if slots slow back to early-September rates"
     deadline: 2026-10-03   # оценка по скорости слотов, замер 2026-09-29 13:03 UTC; пересчитывать перед выпуском
     time: null
     date_precision: "month"   # показывается как приблизительная; точной даты у источника нет
@@ -524,7 +524,7 @@ closed:
     first_issue: 7
 
   - id: "solana-slot-250ms"
-    what: "Solana's third slot-time step (SIMD-0525, 250 ms) went live on mainnet at slot 447,552,000 (2026-09-16 15:03:24 UTC) while solana.com still listed it as 'to be determined' on 2026-09-29. Blockhash expiry (150 blocks) shrinks to ~40 s at the observed ~0.27 s/slot"
+    what: "Solana's third slot-time step (SIMD-0525, 250 ms) went live on mainnet at slot 447,552,000 (2026-09-16 15:03:24 UTC) while solana.com still listed it as 'to be determined' on 2026-09-29 (and 300 ms as current). Blockhash expiry is still 150 blocks; on Solana's own scale (~80 s at 400 ms, ~60 s at 300 ms) the observed ~0.27 s/slot gives ~54 s"
     effective: 2026-09-16   # 15:03:24 UTC
     verified: "yes"   # 2026-09-29: feature account activated_at + getBlockTime + getRecentPerformanceSamples
     source: "https://solana.com/upgrades/reduced-slot-times; feature account iBRLMc81UjRa8fn8A6eE8bJTnRbgQoPTynM51akENCV on mainnet"
