@@ -3,8 +3,11 @@
 # All times UTC. `time: null` means the source stated a date but no time.
 # Keep sorted by deadline.
 
-updated: 2026-09-18
-issue: 7   # 18.09 свип #07: живая сверка закрыла три срока (Chainlink 16.09, Solana 11.09,
+updated: 2026-09-29
+issue: 8   # 29.09 свип #08: живая сверка закрыла десять сроков (OP Upgrade 20, BitMEX,
+           # FIPS, Cosmos Hub, Base Sepolia и др.), Chainlink выключил два фида из трёх 0916;
+           # LayerZero правкой 25.09 задним числом передвинул BounceBit и добавил партию 23.10/30.10.
+           # 18.09 свип #07: живая сверка закрыла три срока (Chainlink 16.09, Solana 11.09,
            # BitMEX 16.09), LayerZero сдвинул Stargate на 23.09 — доска стояла на 30.09.
            # 04.09 добавлены находки свипа #06 и поправки живой сверки.
            # 12.09 доска доведена вне цикла выпуска: четыре строки висели
@@ -12,102 +15,30 @@ issue: 7   # 18.09 свип #07: живая сверка закрыла три �
 
 open:
   - id: "chainlink-feeds-0916"
-    what: "Chainlink scheduled DOLO/USD (Arbitrum), plUSD/USDT (Plasma) and USD0++/USD (Ethereum) for deprecation on 2026-09-16. Checked on-chain 2026-09-18 ~03:22 UTC: USD0++/USD updated 2026-09-17 17:41:23 UTC, DOLO/USD 2026-09-18 03:18:15 UTC — both alive; plUSD/USDT not checked"
+    what: "Chainlink scheduled DOLO/USD (Arbitrum) for deprecation on 2026-09-16 together with USD0++/USD and plUSD/USDT (switched off 21.09 and 25.09). DOLO/USD is still alive: last update 2026-09-29 11:49:53 UTC (checked on-chain 2026-09-29 ~12:40 UTC)"
     deadline: 2026-09-16
     time: null
-    overdue: true   # срок прошёл, фиды живы — держим открытым до факта
+    overdue: true   # срок прошёл, фид жив — держим открытым до факта
     action: "Watch updatedAt on the proxy, not the directory date; move off before it happens"
-    source: "https://dev.chain.link/changelog/feeds-scheduled-for-deprecation-f1f2a (2026-09-04); own on-chain check 2026-09-18"
+    source: "https://dev.chain.link/changelog/feeds-scheduled-for-deprecation-f1f2a (2026-09-04); own on-chain check 2026-09-29"
     source_quality: "primary"
     first_issue: 7
 
-  - id: "bitmex-spot-delisting"
-    what: "BitMEX delists all 7 remaining spot pairs (XBT_USDT, ETH_USDT, BMEX_USDT, SOL_USDT, RLUSD_USDT, XRP_USDT, XAUT_USDT); open orders are cancelled"
-    deadline: 2026-09-21
-    time: "12:00:00"
-    action: "Close spot positions yourself before 12:00 UTC"
-    source: "https://www.bitmex.com/blog/delisting-spot-convert-sept2026 (2026-09-15)"
-    source_quality: "primary"
-    first_issue: 7
-
-  - id: fips-140-2-historical
-    what: "CMVP moves all remaining FIPS 140-2 certificates to the historical list (492 active on 2026-08-28)"
-    deadline: 2026-09-21
+  - id: "coinex-csc-shutdown"
+    what: "CoinEx Smart Chain (CSC) and OneSwap cease operations; the CSC cross-chain bridge redemption window closes at the same time. No time of day given; the public RPC rpc.coinex.net returned 504 on 2026-09-29 12:51 UTC"
+    deadline: 2026-09-29
     time: null
-    action: "Check whether your module has a FIPS 140-3 submission in the CMVP queue; after the date the 140-2 cert is valid for existing systems only, not new procurement"
-    source: "https://csrc.nist.gov/projects/fips-140-3-transition-effort; count via 808bits.com/fips/140-2-sunset/ (2026-08-28)"
-    source_quality: primary
-    first_issue: 5
-
-  - id: "alchemy-7702-default-v110"
-    what: "Alchemy Wallet APIs: new EIP-7702 accounts created via wallet_prepareCalls / wallet_requestAccount delegate by default to SemiModularAccount7702 v1.1.0 (0x77021100bD87b7008E5E1989d0eB38555d0d0000) instead of v1.0.0; existing accounts unchanged"
-    deadline: 2026-09-21
-    time: null
-    action: "If you recognise accounts by delegate address or accountId(), allow v1.1.0 alongside v1.0.0 — or pin new accounts to v1.0.0"
-    source: "https://www.alchemy.com/docs/changelog (2026-08-20, repeated 2026-08-24)"
+    action: "Redeem bridged CSC assets and move funds off CSC; drop CSC from supported networks"
+    source: "https://www.coinex.com/en/announcements/detail/53539656293908 (2026-09-15)"
     source_quality: "primary"
-    first_issue: 7
+    first_issue: 8
 
-  - id: "cosmos-hub-v28-2"
-    what: "Cosmos Hub upgrades to Gaia v28.2.0 — the full fix for the vulnerability behind the private emergency v28.1.0 patch — at height 33,073,000, if expedited proposal 1055 passes (voting ends 2026-09-20 14:59:29 UTC). The date is our estimate from block time (~13:20 UTC); no time was announced, the forum says 'Monday morning'"
-    deadline: 2026-09-21
-    time: null
-    action: "Validators and node operators: have the v28.2.0 binary ready before height 33,073,000"
-    source: "https://forum.cosmos.network/t/17331 (2026-09-17); proposal 1055 on-chain"
-    source_quality: "primary"
-    first_issue: 7
-
-  - id: "bitmex-convert-end"
-    what: "BitMEX removes Convert for all remaining tokens (XBT, ETH, SOL, XRP, USDT, USDC); withdrawals continue"
-    deadline: 2026-09-22
-    time: "04:00:00"
-    action: "Convert odd balances before 04:00 UTC — afterwards you withdraw whatever token you hold"
-    source: "https://www.bitmex.com/blog/delisting-spot-convert-sept2026 (2026-09-15)"
-    source_quality: "primary"
-    first_issue: 7
-
-  - id: bitmex-closure
-    what: "BitMEX ceases exchange operations; withdrawal-only access afterwards"
-    deadline: 2026-09-23
-    time: "04:00:00"
-    action: "Withdraw; balances left behind are charged $50/mo or 1%/yr, whichever is greater"
-    source: "https://www.bitmex.com/blog/bitmex-closure (2026-07-23)"
-    source_quality: primary
-    first_issue: 1
-
-  - id: "base-cobalt-sepolia"
-    what: "Base Cobalt hardfork on Base Sepolia; node releases now come from base/base (v1.4.0+) as ghcr.io/base/node — base/node was archived 2026-09-08 and the node-reth image is deprecated"
-    deadline: 2026-09-23
+  - id: "base-cobalt-mainnet"
+    what: "Base Cobalt hardfork on Base Mainnet at 18:00:00 UTC (timestamp 1790791200): B20 fee payments, validity transactions, dynamic upgrades in metrics-only mode, onchain TEE attestation"
+    deadline: 2026-09-30
     time: "18:00:00"
-    action: "Switch builds to base/base v1.4.0+ and ghcr.io/base/node; drop --rollup.disable-tx-pool-gossip"
-    source: "https://github.com/base/base/releases/tag/v1.4.0 (2026-09-16); https://docs.base.org/upgrades/cobalt/overview"
-    source_quality: "primary"
-    first_issue: 7
-
-  - id: "layerzero-stargate-0923"
-    what: "Stargate v2 drops Aurora, Taiko, LightLink and Gnosis — moved forward from 2026-09-30 by an update to the announcement on 2026-09-09"
-    deadline: 2026-09-23
-    time: null
-    action: "Withdraw S*USDC / S*ETH LP; bridge USDC.e, USDT and ETH out"
-    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24, updated 2026-09-09)"
-    source_quality: "primary"
-    first_issue: 7
-
-  - id: phantom-drops-sui
-    what: "Phantom stops showing, sending and swapping Sui assets (Monad dropped the same way on 2026-08-26)"
-    deadline: 2026-09-24
-    time: null
-    action: "Swap inside Phantom or move the seed phrase to a Sui-compatible wallet (Slush)"
-    source: "https://help.phantom.com/articles/ending-support-for-sui-in-phantom-53868478441491 (2026-08-24)"
-    source_quality: primary
-    first_issue: 5
-
-  - id: "op-upgrade-20-mainnet"
-    what: "OP Stack Upgrade 20 on mainnet (OP, Ink, Unichain, Soneium): Super Root dispute games (types 5 and 9); SystemConfig loses batchInbox() and setGasConfig(uint256,uint256), overhead() returns 0. Source warns 'these dates can move'"
-    deadline: 2026-09-24
-    time: null
-    action: "Upgrade viem to 2.51.0+ and rewrite the withdrawal prove flow; remove calls to batchInbox(), setGasConfig() and reads of overhead()"
-    source: "https://docs.optimism.io/notices/upgrade-20"
+    action: "Run base/base v1.4.2 (v1.4.1 is superseded, v1.4.0 has no mainnet Cobalt) from ghcr.io/base/node; drop --rollup.disable-tx-pool-gossip"
+    source: "https://docs.base.org/upgrades/cobalt/overview; https://github.com/base/base/releases/tag/v1.4.2 (2026-09-23)"
     source_quality: "primary"
     first_issue: 7
 
@@ -132,15 +63,6 @@ open:
     source_quality: primary
     first_issue: 4
 
-  - id: "layerzero-offchain-0930"
-    what: "LayerZero ends offchain (DVN/executor) services for Aurora, Taiko, BounceBit, Japan Open Chain, LightLink — and, added on 2026-09-09, Otherworld Space, Viction, Anime, XPLA, Merlin, Gnosis, Zora, Xai, opBNB. The page warns: 'Impacted chains and dates subject to change'"
-    deadline: 2026-09-30
-    time: null
-    action: "Withdraw LP positions; bridge USDC.e, USDT and ETH to a supported chain"
-    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24, updated 2026-09-09)"
-    source_quality: "primary"
-    first_issue: 2
-
   - id: ipfs-shipyard-end
     what: "Shipyard ends IPFS maintenance and public infrastructure: ipfs.io, dweb.link, delegated-ipfs.dev, bootstrap nodes; Kubo/Helia/Boxo/Rainbow left without dedicated maintainers. Rate limiting on ipfs.io/dweb.link already in effect since 2026-08-25"
     deadline: 2026-09-30
@@ -150,14 +72,42 @@ open:
     source_quality: primary
     first_issue: 5
 
-  - id: "base-cobalt-mainnet"
-    what: "Base Cobalt hardfork on Base Mainnet (time not announced; the general upgrades page still says 'Targeting September 2026')"
+  - id: "chainlink-feeds-0930"
+    what: "Chainlink scheduled 7 feeds for deprecation on 2026-09-30 (EIGEN/USD Ethereum, MLN/USD Arbitrum, FTT/USD Polygon and Gnosis, MAVIA/USD Base, OUSDT/USD Bob, SUSDAI/USD Plasma); the directory carries the same date for 3 more not named in the changelog: xSolvBTC NAV (Avalanche, BNB Chain) and BTCY NAV (Ethereum). On 2026-09-29 ~13:00 UTC all checked feeds were updating except BTCY NAV, last updated 2026-09-10 00:59:35 UTC"
     deadline: 2026-09-30
     time: null
-    action: "Run base/base v1.4.0+ before the fork"
-    source: "https://docs.base.org/upgrades/cobalt/overview"
+    action: "Move off the feed before the date; treat BTCY NAV as already stale"
+    source: "https://dev.chain.link/changelog/feeds-scheduled-for-deprecation-f2dc3 (2026-09-18); reference-data-directory.vercel.app; own on-chain check 2026-09-29"
     source_quality: "primary"
-    first_issue: 7
+    first_issue: 8
+
+  - id: "layerzero-offchain-0930"
+    what: "LayerZero ends offchain (DVN/executor) services for Aurora, Taiko, Japan Open Chain, LightLink, Otherworld Space, Viction, Anime, XPLA, Merlin, Gnosis, Zora, Xai, opBNB. BounceBit, listed here since July, was moved back to 2026-08-28 by the 2026-09-25 edit. The page warns: 'Impacted chains and dates subject to change'"
+    deadline: 2026-09-30
+    time: null
+    action: "Withdraw LP positions; bridge USDC.e, USDT and ETH to a supported chain"
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24, updated 2026-09-09 and 2026-09-25)"
+    source_quality: "primary"
+    first_issue: 2
+
+  - id: "sepolia-eol-lapsed"
+    what: "EF's 2025 plan put Sepolia's end of life at 2026-09-30 with a replacement testnet in March 2026. No replacement launched, and EF scheduled Glamsterdam on Sepolia for 2026-10-06; an EF DevOps proposal on Ethereum Magicians (not a decision) moves the sunset to Q2/Q3 2027. Third-party guides still say Sepolia retires on 30 September"
+    deadline: 2026-09-30
+    time: null
+    action: "Nothing breaks on this date; do not migrate off Sepolia before a replacement is announced"
+    source: "https://blog.ethereum.org/2025/03/18/hoodi-holesky; https://blog.ethereum.org/en/2026/09/17/glamsterdam-testnet-announcement; https://ethereum-magicians.org/t/sepolia-testnet-replacement-sunsetting/28647"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "hiero-local-node-archive"
+    what: "Hiero (Hedera) Local Node is deprecated and to be archived in September 2026; successor is Solo. @hashgraph/hedera-local had 99,840 downloads in the week of 2026-09-21 and carries no npm deprecated flag"
+    deadline: 2026-09-30
+    time: null
+    date_precision: "month"
+    action: "Move local and CI networks to Solo; pin Local Node images meanwhile"
+    source: "https://github.com/hiero-ledger/hiero-local-node (README); https://hedera.com/blog/hiero-local-node-deprecation-6-month-transition-to-solo/ (2026-03-10)"
+    source_quality: "primary"
+    first_issue: 8
 
   - id: "stargate-bus-end"
     what: "Stargate Bus mode ends; all transfers go through Taxi"
@@ -167,6 +117,43 @@ open:
     source: "https://layerzero.network/blog/ecosystem-update-september-2026 (2026-09-15)"
     source_quality: "primary"
     first_issue: 7
+
+  - id: "bitmex-account-fees"
+    what: "BitMEX starts charging monthly account service fees on all KYC'd accounts that still hold funds (the exchange closed 2026-09-23; withdrawals are web-only)"
+    deadline: 2026-10-01
+    time: null
+    action: "Withdraw what is left via the web portal before fees start eating it"
+    source: "https://support.bitmex.com/hc/en-gb/articles/39347377557149 (created 2026-09-23)"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "sns-sol-resolution-pause"
+    what: "SNS pauses resolution of .sol domains in the official SDKs at slot 452,825,395; existing domains become .sns. The source gives a slot, not a day, and SNS's blog still says 'mid to late October' — at the measured slot rate (0.2675 s/slot on 2026-09-29) the slot lands on ~2026-10-03 04:15 UTC (04:00-21:00 across September's slot rates)"
+    deadline: 2026-10-03   # оценка по скорости слотов, замер 2026-09-29 13:03 UTC; пересчитывать перед выпуском
+    time: null
+    date_precision: "month"   # показывается как приблизительная; точной даты у источника нет
+    action: "Upgrade SNS SDKs (JS v3->v4, Kit v0.10->v1, Rust v1->v2), switch displayed suffix to .sns, do not rely on .sol resolution in payment flows"
+    source: "https://dev.sns.id/docs/migration; https://www.sns.id/blog/domain-upgrade (2026-08-03); own getSlot/getRecentPerformanceSamples 2026-09-29"
+    source_quality: "primary"
+    first_issue: 7
+
+  - id: "sepolia-glamsterdam"
+    what: "Glamsterdam (ePBS, block-level access lists, gas repricing incl. no refunds in block gas accounting, dearer state creation and calldata) activates on Sepolia at epoch 353,024. Required client releases carry their own breaks: Nethermind 2.0.0 config keys that crash on start, Erigon 3.7.0 needs x86-64-v2 and rejects two removed flags, Prysm 7.2.0 defaults to a 60M gas limit after the fork. Hoodi and mainnet: TBD"
+    deadline: 2026-10-06
+    time: "13:53:36"
+    action: "Upgrade both EL and CL to the versions in EF's table after reading your client's breaking changes; test contracts against the repricing guide"
+    source: "https://blog.ethereum.org/en/2026/09/17/glamsterdam-testnet-announcement (posted 2026-09-28)"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "zcash-nu7-testnet"
+    what: "Zcash NU7 activates on Testnet: 25-second blocks (ZIP 218), v4 transactions invalid (ZIP 2003), NSM (ZIP 237). Activation height not yet assigned — ZIP 259 says it is set on 2026-10-05"
+    deadline: 2026-10-06
+    time: null
+    action: "Testnet node operators and seeders: run a Zebra/Zakura release with NU7 heights before activation; test v5/v6-only transaction construction"
+    source: "https://forum.zcashcommunity.com/t/nu7-timeline/57655 (2026-09-17); https://github.com/zcash/zips/blob/main/zips/zip-0259.md"
+    source_quality: "primary"
+    first_issue: 8
 
   - id: "chainlink-lasttradedprice"
     what: "Chainlink deprecates lastTradedPrice on 24/5 U.S. Equity Streams: after this date the field is not monitored for availability or quality"
@@ -187,7 +174,7 @@ open:
     first_issue: 7
 
   - id: sui-jsonrpc-removal
-    what: "Sui JSON-RPC fully decommissioned, including code removal"
+    what: "Sui JSON-RPC fully decommissioned, including code removal. Intermediate step per the migration guide: the implicit fallback from JSON-RPC to the archival service is disconnected at the end of September 2026"
     deadline: 2026-10-15   # docs say 'mid-October 2026'; exact day not stated
     time: null
     date_precision: month
@@ -195,16 +182,6 @@ open:
     source: "https://docs.sui.io/references/sui-api"
     source_quality: primary
     first_issue: 1
-
-  - id: "sns-sol-resolution-pause"
-    what: "SNS pauses resolution of .sol domains in the official SDKs at slot 452,825,395; existing domains become .sns. The source gives a slot, not a day — the date here is SNS's own 'mid to late October' target; our estimate from slot rate is ~2026-10-06..10"
-    deadline: 2026-10-15
-    time: null
-    date_precision: "month"
-    action: "Upgrade SNS SDKs (JS v3->v4, Kit v0.10->v1, Rust v1->v2), switch displayed suffix to .sns, do not rely on .sol resolution in payment flows"
-    source: "https://dev.sns.id/docs/migration; https://www.sns.id/blog/domain-upgrade (2026-08-03)"
-    source_quality: "primary"
-    first_issue: 7
 
   - id: "etherscan-arc-robinhood-paid"
     what: "Etherscan: community endpoints for Arc Mainnet (5042) and Robinhood Chain (4663) — free until 2026-10-15 — require Lite or above; networks now arrive with the date their free access ends"
@@ -214,6 +191,42 @@ open:
     source: "https://docs.etherscan.io/changelog (2026-09-16)"
     source_quality: "primary"
     first_issue: 7
+
+  - id: "balancer-v3-keep-alive-request"
+    what: "Balancer wind-down (BIP-928; Snapshot vote closes 2026-09-29 18:00 UTC, at 12:40 UTC ~16.8M BAL for, 0.14M against, quorum met): last day for partners to ask that a v3 pool keep running until 2026-11-30 instead of pausing on 2026-10-30"
+    deadline: 2026-10-16
+    time: null
+    action: "If you run a v3 pool or integration and need more time to migrate, ask Balancer by this date"
+    source: "https://forum.balancer.fi/t/bip-xxx-orderly-winddown-of-balancer-and-distribution-of-the-treasury/7107 (2026-09-14, edited 2026-09-24); Snapshot BIP-928"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "layerzero-stargate-1023"
+    what: "Stargate v2 drops Gravity, Camp, GOAT and Metis (added by the 2026-09-25 edit); offchain services for the same chains end a week later"
+    deadline: 2026-10-23
+    time: null
+    action: "Gravity/GOAT: bridge USDC.e, Hydra USDT, WETH out; Camp: USDC.e, WETH; Metis: withdraw S*USDT, S*ETH and Metis Pool LP"
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (updated 2026-09-25)"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "balancer-withdrawals-only"
+    what: "Balancer wind-down (BIP-928): pausable pools (v2 and v3) are paused and move to withdrawals only, with recovery mode where the contracts require it; the protocol fee goes to zero on the rest where allowed; the bug bounty ends; the frontend and routing treat the protocol as discontinued"
+    deadline: 2026-10-30
+    time: null
+    action: "LPs: exit or use the documented withdrawal path. Routers and aggregators: drop Balancer pools from routes before this date"
+    source: "https://forum.balancer.fi/t/bip-xxx-orderly-winddown-of-balancer-and-distribution-of-the-treasury/7107 (2026-09-14, edited 2026-09-24); Snapshot BIP-928"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "layerzero-offchain-1030"
+    what: "LayerZero ends offchain (DVN/executor) services for Gravity, Camp, Lisk, GOAT and Metis (added 2026-09-25)"
+    deadline: 2026-10-30
+    time: null
+    action: "OApps on these chains: plan your own DVN/executor or migrate; users: exit Stargate assets by 2026-10-23"
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (updated 2026-09-25)"
+    source_quality: "primary"
+    first_issue: 8
 
   - id: "circle-cctp-v1-burn-limits"
     what: "CCTP V1 burn limits start reducing towards zero (Circle's Noble exit)"
@@ -234,6 +247,24 @@ open:
     source_quality: "primary"
     first_issue: 7
 
+  - id: "zebra-6-4-eos-halt"
+    what: "Zebra 6.4.x reaches its end-of-support halt 'approximately Nov 2nd, 2026' (window cut from 15 to 12 weeks for NU7). 6.4.0 and 6.4.1 are withdrawn — 6.4.2 fixes DoS GHSA-h5rr-8pqv-grp9"
+    deadline: 2026-11-02
+    time: null
+    action: "Run 6.4.2 now; install the NU7-supporting release before the halt"
+    source: "https://github.com/ZcashFoundation/zebra/releases/tag/v6.4.0 (2026-09-23); https://github.com/ZcashFoundation/zebra/releases/tag/v6.4.2 (2026-09-25)"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "zcash-nu7-mainnet"
+    what: "Zcash NU7 on Mainnet (target): 25-second blocks, per-block subsidy divided by 3, v4 transactions invalid — Sprout funds become unspendable. Mainnet height and go/no-go decided 2026-10-20; zcashd is archived and does not support NU7"
+    deadline: 2026-11-05
+    time: null
+    action: "Node operators: upgrade Zebra/Zakura to the NU7 release. Wallets/exchanges: stop building v4 transactions, revisit confirmation counts. Sprout holders: move funds out before activation"
+    source: "https://forum.zcashcommunity.com/t/nu7-timeline/57655 (2026-09-17); https://github.com/zcash/zips/blob/main/zips/zip-0259.md"
+    source_quality: "primary"
+    first_issue: 8
+
   - id: solana-rent-phases-3-5
     what: "Solana rent reduction phases 3-5 (SIMD-0437-3/4/5): lamports_per_byte down to 2,575 -> 1,322 -> 696 (-90% against the original 6,960), expected with Agave 4.4. An empty account ends at 89,088 lamports"
     deadline: 2026-11-15
@@ -243,6 +274,25 @@ open:
     source: "https://solana.com/upgrades/reduced-rent"
     source_quality: primary
     first_issue: 6
+
+  - id: "solana-sbpfv3-deploys"
+    what: "Solana SIMD-0500: after activation, deploys, upgrades and finalizations of programs built for sBPF v0-v2 are rejected; deployed programs keep running. Expected with Agave 4.4 in November 2026; feature not active on any cluster on 2026-09-29"
+    deadline: 2026-11-15
+    time: null
+    date_precision: "month"
+    action: "Rebuild for sBPFv3 now (Solana CLI 4.3.0; Anchor 0.30.2/0.31.2/0.32.2/1.2.0+, Pinocchio 0.10+, solana-program 2.3.0+) and check the .so header flag 0x3"
+    source: "https://solana.com/upgrades/sbpfv3-programs"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "balancer-v3-vault-pause"
+    what: "Balancer wind-down (BIP-928): the v3 Vault is paused; v3 pools kept alive at partners' request move to withdrawals only"
+    deadline: 2026-11-30
+    time: null
+    action: "Partners with kept-alive v3 pools: finish migrating liquidity"
+    source: "https://forum.balancer.fi/t/bip-xxx-orderly-winddown-of-balancer-and-distribution-of-the-treasury/7107 (2026-09-14, edited 2026-09-24)"
+    source_quality: "primary"
+    first_issue: 8
 
   - id: "circle-cctp-v1-pause"
     what: "CCTP V1 (Legacy) contracts are paused on all chains; from Noble, exits 'may be limited' to chains still supporting V1 burns"
@@ -280,6 +330,24 @@ open:
     source_quality: "primary"
     first_issue: 7
 
+  - id: "coinex-withdrawal-deadline"
+    what: "CoinEx exchange closes for good: withdrawals end. Non-USDT assets were converted to USDT or delisted from 2026-09-29 02:00 UTC; unwithdrawn USDT goes to independent custody with a 5%/month fee on the end-of-window balance; custody claims close 2028-08-22"
+    deadline: 2026-12-22
+    time: "02:00:00"
+    action: "Withdraw everything before 02:00 UTC; don't leave it to the last day"
+    source: "https://www.coinex.com/en/announcements/detail/53539656293908 (2026-09-15)"
+    source_quality: "primary"
+    first_issue: 8
+
+  - id: "silicon-network-termination"
+    what: "Silicon Network (Polygon CDK L2 tied to Korbit) ends its withdrawal window; explorer shutdown and network termination follow, unwithdrawn assets unrecoverable. Bridge deposits stopped 2026-09-02; tokens issued inside the network cannot be bridged to Ethereum"
+    deadline: 2026-12-31
+    time: "03:00:00"   # источник: 12:00 UTC+9
+    action: "Bridge Ethereum-origin assets back to mainnet; sell native tokens inside while liquidity lasts; keep ETH for gas"
+    source: "https://docs.silicon.network/important-service-termination (announced 2026-09-02)"
+    source_quality: "primary"
+    first_issue: 8
+
   - id: "circle-noble-pause-snapshot"
     what: "Noble USDC contract and CCTP routes fully paused; Circle snapshots all USDC balances on Noble. Manual redemption opens 2027-01-13 for 'a holder-controlled wallet' whose address is in the snapshot. The announcement does not say what happens to USDC held by pools, contracts or IBC escrow — which on 2026-09-18 03:21 UTC was 91,390,167 of 102,047,335 USDC on Noble (89.6%), held for other Cosmos chains"
     deadline: 2027-01-12
@@ -300,17 +368,147 @@ open:
 
   - id: hoodi-eol
     what: "Ethereum Hoodi testnet end-of-life (planned lifecycle)"
-    deadline: 2028-09-01
+    deadline: 2028-09-30   # было 2028-09-01 с точностью «месяц»; источник называет день
     time: null
-    date_precision: month
     action: "None yet — the point is that the date exists up front"
-    source: "Ethereum Foundation testnet lifecycle policy (Holesky shutdown announcement, 2025-09-01)"
+    source: "https://blog.ethereum.org/2025/03/18/hoodi-holesky ('Expected end of life 30th September, 2028')"
     source_quality: primary
     first_issue: 1
 
 # Expired within the covered window — reported once as 'already in effect', then archived.
 
 closed:
+  - id: "chainlink-node-pg15"
+    what: "Chainlink node v2.66.0 refuses to start on PostgreSQL 12-14 (minimum 15; SKIP_PG_VERSION_CHECK is unsupported) and drops deprecated Cosmos support"
+    effective: 2026-09-28
+    verified: "yes"
+    source: "https://github.com/smartcontractkit/chainlink/releases/tag/v2.66.0"
+    first_issue: 8
+
+  - id: "chainlink-plusd-0916"
+    what: "Chainlink switched off plUSD/USDT on Plasma nine days after its 'September 16th, 2026' date: aggregator set to the zero address in block 33,409,236 (2026-09-25 15:29:32 UTC). The feed had not updated since 2026-08-25 17:38:53 UTC — a month past its 24h heartbeat — and was removed from the directory outright rather than marked"
+    effective: 2026-09-25   # 15:29:32 UTC, block 33,409,236
+    verified: "yes"   # 2026-09-29: бисекция на rpc.plasma.to; адрес прокси — из снимка euler-xyz/oracle-checks, в справочнике Chainlink строки уже нет
+    source: "https://dev.chain.link/changelog/feeds-scheduled-for-deprecation-f1f2a (2026-09-04); proxy 0xfCAEc9E856ee40b5bf044e06075b8c609Dca2CeC on Plasma; own on-chain check 2026-09-29"
+    first_issue: 7
+    reported_issue: 8
+
+  - id: "moralis-drops-moonbeam-lisk"
+    what: "Moralis removed Moonbeam (0x504), Moonriver (0x505) and Lisk (0x46f) from Data API, Streams, RPC Nodes and Datashare, including historical data. Lisk is still producing blocks"
+    effective: 2026-09-25
+    verified: "partial"   # Lisk жива (блок 37,978,962, 29.09); ответы Moralis не проверялись — нужен ключ
+    source: "https://docs.moralis.com/changelog (2026-08-26)"
+    first_issue: 8
+
+  - id: "layerzero-retro-0925"
+    what: "LayerZero's 2026-09-25 edit put two past dates into its wind-down table: Harmony offchain services ended 2026-09-08, and BounceBit — listed for 2026-09-30 since July — now reads 2026-08-28"
+    effective: 2026-09-25   # дата правки; сами события датированы 08.09 и 28.08
+    verified: "no"   # живой проверки DVN нет; факт — только правка страницы
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (updated 2026-09-25)"
+    first_issue: 8
+
+  - id: "archives-0920-0924"
+    what: "Archived: celestiaorg/blobstream-contracts (20.09; contract deprecated, use sp1-blobstream or blobstream0), InjectiveLabs/injective-chain-releases (21.09; releases moved to InjectiveFoundation/injective-core), ton-blockchain/tvm-web-viewer (24.09, no notice)"
+    effective: 2026-09-24
+    verified: "yes"
+    source: "https://github.com/celestiaorg/blobstream-contracts; https://github.com/InjectiveLabs/injective-chain-releases; https://github.com/ton-blockchain/tvm-web-viewer (archivedAt via GraphQL, 2026-09-29)"
+    first_issue: 8
+
+  - id: "op-upgrade-20-mainnet"
+    what: "OP Stack Upgrade 20 executed on mainnet for OP, Ink, Unichain and Soneium in one L1 block (26,048,619, 2026-09-24 16:51:23 UTC): SystemConfig 4.0.0 — batchInbox() reverts, overhead() returns 0; DisputeGameFactory now serves Super Root games (types 5 and 9) and the Output Root types 0/1 are unset. Withdrawal provers must anchor by L2 timestamp (viem 2.51.0+). The docs notice still shows target dates"
+    effective: 2026-09-24   # 16:51:23 UTC, L1 block 26,048,619
+    verified: "yes"   # 2026-09-29: eth_call version/batchInbox/overhead/gameImpls на четырёх SystemConfig + бисекция через eth.drpc.org
+    source: "https://docs.optimism.io/notices/upgrade-20; SystemConfig 0x229047fed2591dbec1eF1118d64F7aF3dB9EB290 on Ethereum"
+    first_issue: 7
+    reported_issue: 8
+
+  - id: phantom-drops-sui
+    what: "Phantom stopped showing, sending and swapping Sui assets; dapp connections on Sui through Phantom stopped working. Sui is gone from Phantom's supported-networks list (Monad went the same way on 2026-08-26)"
+    effective: 2026-09-24
+    verified: "partial"   # 2026-09-29: справка в прошедшем времени + список сетей без Sui; само приложение не проверялось
+    source: "https://help.phantom.com/articles/ending-support-for-sui-in-phantom-53868478441491 (2026-08-24); https://help.phantom.com/articles/supported-networks-chains-in-phantom-41372840389651"
+    first_issue: 5
+    reported_issue: 8
+
+  - id: bitmex-closure
+    what: "BitMEX ceased exchange operations; withdrawal-only access since, web only — support says 'API withdrawals are disabled' (article updated 2026-09-24 04:04 UTC) and USDT/USDC/ETH go out via Ethereum only. KYC'd accounts are charged service fees from 2026-10-01"
+    effective: 2026-09-23   # 04:00 UTC
+    verified: "yes"   # 2026-09-29: главная 'Trading ceased on 23 September 2026 at 04:00 UTC'; /instrument state=Open -> []; /wallet/assets: депозит открыт только у XBT (btc)
+    source: "https://www.bitmex.com/blog/bitmex-closure (2026-07-23); https://www.bitmex.com/blog/bitmex-closure-live; https://support.bitmex.com/hc/en-gb/articles/6910725259677"
+    first_issue: 1
+    reported_issue: 8
+
+  - id: "base-cobalt-sepolia"
+    what: "Base Cobalt hardfork activated on Base Sepolia at 18:00:00 UTC (timestamp 1790186400); node releases come from base/base as ghcr.io/base/node, base/node archived"
+    effective: 2026-09-23   # 18:00:00 UTC
+    verified: "partial"   # таймстемп из base/base config.rs + сеть идёт сквозь границу (блок 47,209,056 = 18:00:00); отдельного ончейн-маркера активации нет
+    source: "https://docs.base.org/upgrades; https://github.com/base/base/blob/main/crates/common/chains/src/config.rs; https://github.com/base/base/releases/tag/v1.4.0"
+    first_issue: 7
+    reported_issue: 8
+
+  - id: "layerzero-stargate-0923"
+    what: "Stargate v2 dropped Aurora, Taiko, LightLink and Gnosis (date moved forward from 2026-09-30 by the 2026-09-09 edit). On 2026-09-29 LayerZero's transfer API lists no Stargate assets on the four chains, while Gravity (due 2026-10-23) still has USDC.e/USDT/WETH"
+    effective: 2026-09-23
+    verified: "partial"   # 2026-09-29: transfer.layerzero-api.com/v1/tokens; ончейн пулы не проверялись
+    source: "https://layerzero.network/blog/support-update-july-24-2026 (2026-07-24, updated 2026-09-09 and 2026-09-25)"
+    first_issue: 7
+    reported_issue: 8
+
+  - id: "onchainkit-deprecated"
+    what: "Coinbase deprecated OnchainKit and archived coinbase/onchainkit (no further updates or security patches; use wagmi + viem). Final releases @coinbase/onchainkit and create-onchain 1.1.3 (2026-09-21) carry no npm deprecated flag; 22,064 downloads in the week of 2026-09-21"
+    effective: 2026-09-22   # archivedAt 18:19:01 UTC
+    verified: "yes"
+    source: "https://github.com/coinbase/onchainkit; https://github.com/coinbase/onchainkit/pull/2682"
+    first_issue: 8
+
+  - id: "bitmex-convert-end"
+    what: "BitMEX removed Convert for all remaining tokens (XBT, ETH, SOL, XRP, USDT, USDC); withdrawals continue"
+    effective: 2026-09-22   # 04:00 UTC
+    verified: "partial"   # пост 'Remaining Tokens Now Removed from Convert'; Convert публичным API не наблюдается
+    source: "https://www.bitmex.com/blog/delisting-spot-convert-sept2026 (2026-09-15); https://www.bitmex.com/blog/delisting-convert-sept2026-live-2"
+    first_issue: 7
+    reported_issue: 8
+
+  - id: "chainlink-usd0pp-0916"
+    what: "Chainlink switched off USD0++/USD on Ethereum five days after its 'September 16th, 2026' deprecation date: the proxy's aggregator was set to the zero address in block 26,027,552 (2026-09-21 18:04:23 UTC); latestRoundData reverts since. Last round 0.97024998 at 17:42:59 UTC. The directory still lists it as 'deprecating'"
+    effective: 2026-09-21   # 18:04:23 UTC, block 26,027,552
+    verified: "yes"   # 2026-09-29: бисекция eth_call latestRoundData + aggregator() через eth.drpc.org
+    source: "https://dev.chain.link/changelog/feeds-scheduled-for-deprecation-f1f2a (2026-09-04); reference-data-directory.vercel.app/feeds-mainnet.json; own on-chain check 2026-09-29"
+    first_issue: 7
+    reported_issue: 8
+
+  - id: "cosmos-hub-v28-2"
+    what: "Cosmos Hub upgraded to Gaia v28.2.0 at height 33,073,000 (2026-09-21 13:14:50 UTC) after expedited proposal 1055 passed. v28.2.0 was never tagged publicly on GitHub. The next day the Hub halted for ~25 hours at height 33,086,740 over the Neutron governance attack and restarted on v28.3.0"
+    effective: 2026-09-21   # 13:14:50 UTC, height 33,073,000
+    verified: "yes"   # 2026-09-29: /cosmos/upgrade/v1beta1/applied_plan/v28.2.0 = 33073000 + время блока через cosmos-rest.publicnode.com
+    source: "https://forum.cosmos.network/t/17331 (2026-09-17); proposal 1055 on-chain; https://forum.cosmos.network/t/17369 (2026-09-25)"
+    first_issue: 7
+    reported_issue: 8
+
+  - id: "alchemy-7702-default-v110"
+    what: "Alchemy Wallet APIs: new EIP-7702 accounts delegate by default to SemiModularAccount7702 v1.1.0 (0x77021100bD87b7008E5E1989d0eB38555d0d0000) instead of v1.0.0; existing accounts keep their recorded delegate, v1.0.0 available on explicit request. The changelog already described v1.1.0 as the default on 2026-09-17"
+    effective: 2026-09-21
+    verified: "partial"   # 2026-09-29: только документация (using-eip-7702); ончейн новые делегирования не проверялись
+    source: "https://www.alchemy.com/docs/changelog (2026-08-20, 2026-09-17); https://www.alchemy.com/docs/wallets/transactions/using-eip-7702"
+    first_issue: 7
+    reported_issue: 8
+
+  - id: fips-140-2-historical
+    what: "CMVP moved all remaining FIPS 140-2 certificates to the historical list ('Moved to historical list due to sunsetting'): 482 were still Active on 2026-09-18, none on 2026-09-29. Valid for existing systems only, not new procurement"
+    effective: 2026-09-21   # NIST: действуют по 21.09, в таблице перенос 22.09; точный момент снаружи не виден
+    verified: "yes"   # 2026-09-29: поиск CMVP 140-2 Active -> 'No certificates match'; cert #5059 Historical Reason 'sunsetting'
+    source: "https://csrc.nist.gov/projects/fips-140-3-transition-effort; CMVP validated-modules search 2026-09-18 and 2026-09-29"
+    first_issue: 5
+    reported_issue: 8
+
+  - id: "bitmex-spot-delisting"
+    what: "BitMEX delisted its last 7 spot pairs (XBT_USDT, ETH_USDT, BMEX_USDT, SOL_USDT, RLUSD_USDT, XRP_USDT, XAUT_USDT) at 12:00:00 UTC; open orders cancelled. No Open instrument is left on BitMEX"
+    effective: 2026-09-21   # 12:00 UTC
+    verified: "yes"   # 2026-09-29, GET /api/v1/instrument: 7/7 Delisted, settle 2026-09-21T12:00:00Z; filter state=Open -> []
+    source: "https://www.bitmex.com/blog/delisting-spot-convert-sept2026 (2026-09-15); https://www.bitmex.com/blog/delisting-spot-sept2026-live"
+    first_issue: 7
+    reported_issue: 8
+
   - id: "chainlink-streams-0918"
     what: "Chainlink scheduled ~57 Data Streams (ABBV, BAC, TSLA/USDT, WSTETH, WEETH, TBTC, LBTC, JITOSOL, tKalshi NAV and others) for deprecation on 2026-09-18 — announced 2026-09-16, two days ahead"
     effective: 2026-09-18
@@ -324,6 +522,13 @@ closed:
     verified: "yes"
     source: "https://github.com/ton-blockchain/verifier; https://github.com/thirdweb-dev/engine; https://github.com/thirdweb-dev/contracts; https://github.com/suiet/wallet-kit (archivedAt via GraphQL)"
     first_issue: 7
+
+  - id: "solana-slot-250ms"
+    what: "Solana's third slot-time step (SIMD-0525, 250 ms) went live on mainnet at slot 447,552,000 (2026-09-16 15:03:24 UTC) while solana.com still listed it as 'to be determined' on 2026-09-29. Blockhash expiry (150 blocks) shrinks to ~40 s at the observed ~0.27 s/slot"
+    effective: 2026-09-16   # 15:03:24 UTC
+    verified: "yes"   # 2026-09-29: feature account activated_at + getBlockTime + getRecentPerformanceSamples
+    source: "https://solana.com/upgrades/reduced-slot-times; feature account iBRLMc81UjRa8fn8A6eE8bJTnRbgQoPTynM51akENCV on mainnet"
+    first_issue: 8
 
   - id: "chainlink-three-feeds-0902"
     what: "Chainlink switched off CSPX/USD, IB01/USD and IBTA/USD on Ethereum — 14 days after the 'September 2nd, 2026' shutdownDate in its directory. All three proxies had their aggregator set to the zero address in one block (25,992,685, 2026-09-16 21:20:23 UTC); latestRoundData reverts since. Last updates that day: CSPX 07:31:47, IB01 08:20:35, IBTA 20:01:47 UTC. The directory still lists them as 'deprecating' with the old date"
@@ -442,6 +647,13 @@ closed:
     reported_issue: 6
   # chainlink-three-feeds-0902 переехал обратно в `open` 2026-09-04:
   # живая проверка показала, что объявленный срок прошёл, а фиды работают.
+
+  - id: "gelato-legacy-relay-off"
+    what: "Legacy Gelato Relay no longer relays Safe transactions (GelatoRelayPack: 1Balance and SyncFee); Gelato's old ERC-2771 trusted forwarder and callWithSyncFee are deprecated with no replacement"
+    effective: 2026-09-01
+    verified: "partial"   # дата — из Safe Docs; собственной даты Gelato не найдено, GMX 17.09 подтверждает «since the Gelato shutdown»
+    source: "https://docs.safe.global/sdk/relay-kit/guides/gelato-relay; https://github.com/gelatodigital/gelato-migration-erc2271-syncfee"
+    first_issue: 8
 
   - id: scrt-labs-ends-secret
     what: "SCRT Labs ended development and support of the Cosmos-based Secret L1; network continues community-maintained (proposal 365 passed 2026-08-19, v1.26.0-community-continuance 2026-08-21)"
